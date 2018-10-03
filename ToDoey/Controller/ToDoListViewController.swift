@@ -7,17 +7,20 @@
 //
 
 import UIKit
+import CoreData
 
 class ToDoListViewController: UITableViewController {
 
     var itemArray =  [Item]()
     let defaults = UserDefaults.standard
     let dataFilePath = FileManager.default.urls(for: FileManager.SearchPathDirectory.documentDirectory, in: FileManager.SearchPathDomainMask.userDomainMask).first?.appendingPathComponent("Item.plist")
+    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        print(dataFilePath)
         // Do any additional setup after loading the view, typically from a nib.
         loadData()
     }
@@ -58,6 +61,9 @@ class ToDoListViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
+        
+     
+        
            itemArray[indexPath.row].done = !itemArray[indexPath.row].done
          tableView.deselectRow(at: indexPath, animated: true)
         saveData()
@@ -94,8 +100,9 @@ class ToDoListViewController: UITableViewController {
         
         let action = UIAlertAction(title: "Add Item", style: UIAlertActionStyle.default, handler: { (action) in
            
-            let newItem = Item()
+            let newItem = Item(context: self.context)
             newItem.title = textField.text!
+            newItem.done = false
             self.itemArray.append(newItem)
             self.saveData()
         })
@@ -116,32 +123,52 @@ class ToDoListViewController: UITableViewController {
     
     func saveData()
     {
-        let encoder = PropertyListEncoder()
+        
+        //Using Encoder
+//        let encoder = PropertyListEncoder()
+//        do{
+//        let data = try encoder.encode(itemArray);
+//            try data.write(to: dataFilePath!)
+//        }catch
+//        {
+//
+//        }
+        
+        //Using Sqlite
         do{
-        let data = try encoder.encode(itemArray);
-            try data.write(to: dataFilePath!)
-        }catch
-        {
+          try context.save()
+        }catch{
             
         }
+        
         
        tableView.reloadData()
         
     }
     
     func loadData()  {
+
+         //Using Encoder
+//        if let data = try? Data(contentsOf: dataFilePath!)
+//        {
+//            let decoder = PropertyListDecoder()
+//            do{
+//             itemArray = try decoder.decode([Item].self, from: data)
+//            }catch
+//            {
+//
+//            }
+//
+//        }
         
-        if let data = try? Data(contentsOf: dataFilePath!)
-        {
-            let decoder = PropertyListDecoder()
-            do{
-             itemArray = try decoder.decode([Item].self, from: data)
-            }catch
-            {
-                
-            }
+          //Using Sqlite
+        let request : NSFetchRequest<Item> = Item.fetchRequest()
+        do{
+                    itemArray =  try context.fetch(request)
+                        }catch
+                        {
             
-        }
+                        }
         
     }
     
