@@ -24,17 +24,10 @@ class ToDoListViewController: UITableViewController {
     }
     
     let defaults = UserDefaults.standard
-  //  let dataFilePath = FileManager.default.urls(for: FileManager.SearchPathDirectory.documentDirectory, in: FileManager.SearchPathDomainMask.userDomainMask).first?.appendingPathComponent("Item.plist")
-  
-    // let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
-    
-    
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
-      //  print(dataFilePath)
-        // Do any additional setup after loading the view, typically from a nib.
-       // loadData()
     }
 
     override func didReceiveMemoryWarning() {
@@ -79,32 +72,6 @@ class ToDoListViewController: UITableViewController {
             }catch{}
         }
         tableView.reloadData()
-        
-        
-//        itemArray[indexPath.row].done = !itemArray[indexPath.row].done
-//         tableView.deselectRow(at: indexPath, animated: true)
-//        saveData()
-        
-        // this code can be written in one line
-//        if itemArray[indexPath.row].done == true
-//        {
-//            itemArray[indexPath.row].done = false
-//        }else
-//        {
-//            itemArray[indexPath.row].done = true
-//        }
-        
-        
-        //we need to associate check property not with cell
-//        if tableView.cellForRow(at: indexPath)?.accessoryType == .checkmark
-//        {
-//            tableView.cellForRow(at: indexPath)?.accessoryType = .none
-//        }else
-//        {
-//            tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
-//        }
-//
-       
         
     }
     
@@ -161,71 +128,6 @@ class ToDoListViewController: UITableViewController {
         tableView.reloadData()
     }
     
-//    func saveData()
-//    {
-//
-        //Using Encoder
-//        let encoder = PropertyListEncoder()
-//        do{
-//        let data = try encoder.encode(itemArray);
-//            try data.write(to: dataFilePath!)
-//        }catch
-//        {
-//
-//        }
-        
-        //Using CoreData
-//        do{
-//          try context.save()
-//        }catch{
-//
-//        }
-//
-    
-//
-//       tableView.reloadData()
-//
-//    }
-    
-    
-    
-    
-//    func loadData(with request:NSFetchRequest<Item> = Item.fetchRequest(),predicate : NSPredicate? = nil)  //with : external parameter and request : internal parameter when we don't pass the value for request then it take Item.fetchRequest as default parameter
-//    {
-//
-//
-//         //Using CoreDataa
-//        let categoryPredicate = NSPredicate(format: "parentCategory.name MATCHES %@",categorySelected!.name!)
-//
-//        if  let additionalPredicate = predicate{
-//            request.predicate  = NSCompoundPredicate(andPredicateWithSubpredicates: [categoryPredicate,additionalPredicate])
-//        }else
-//        {
-//            request.predicate = categoryPredicate
-//        }
-//
-//        do{
-//           itemArray =  try context.fetch(request)
-//           }catch
-//           {
-//           }
-//        tableView.reloadData()
-//
-//        //Using Encoder
-//        //        if let data = try? Data(contentsOf: dataFilePath!)
-//        //        {
-//        //            let decoder = PropertyListDecoder()
-//        //            do{
-//        //             itemArray = try decoder.decode([Item].self, from: data)
-//        //            }catch
-//        //            {
-//        //
-//        //            }
-//        //
-//        //        }
-//
-//    }
-    
     
 }
 
@@ -238,13 +140,6 @@ extension ToDoListViewController : UISearchBarDelegate
         
         itemArray = itemArray?.filter("title CONTAINS[cd] %@",searchBar.text!).sorted(byKeyPath: "title", ascending: true)
         tableView.reloadData()
-//        let request : NSFetchRequest<Item> = Item.fetchRequest()
-//        //Predicate is used for quering data
-//
-//         let predicate = NSPredicate(format: "title CONTAINS[cd] %@", searchBar.text!) //String comparisons are by default case and diacritic sensitive so to make it insensitive .
-//        request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)] // sorting it
-//
-//        loadData(with: request,predicate: predicate)
         
     }
     

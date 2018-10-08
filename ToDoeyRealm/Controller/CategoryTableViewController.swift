@@ -101,13 +101,6 @@ class CategoryTableViewController: UITableViewController {
         
         categoryArray = realm.objects(Category.self)
         
-//        let request : NSFetchRequest<Category> =  Category.fetchRequest()
-//        do{
-//            categoryArray = try context.fetch(request)
-//        }catch
-//        {
-//
-//        }
         
     }
 
