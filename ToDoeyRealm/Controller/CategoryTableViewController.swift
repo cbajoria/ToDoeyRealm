@@ -8,19 +8,18 @@
 
 import UIKit
 import RealmSwift
+import ChameleonFramework
 
-class CategoryTableViewController: UITableViewController {
+class CategoryTableViewController: SwipeTableViewController {
 
     let realm = try! Realm()
     
     //var categoryArray = [Category]()
     var categoryArray : Results<Category>?
-    
-    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
 
-    
     override func viewDidLoad() {
         super.viewDidLoad()
+        tableView.separatorStyle = .none
         loadCategory()
     }
 
@@ -31,11 +30,17 @@ class CategoryTableViewController: UITableViewController {
 
     // MARK: - Table view data source
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "CategoryCell", for: indexPath)
+          let cell = super.tableView(tableView, cellForRowAt: indexPath)
+       // let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
         cell.textLabel?.text = categoryArray?[indexPath.row].name ?? "No Category Added yet"
+        guard let color = UIColor(hexString: (categoryArray?[indexPath.row].colour)!) else{fatalError()}
+        cell.backgroundColor = color
+        cell.textLabel?.textColor = ContrastColorOf( color, returnFlat: true)
+        
         return cell
         
     }
+
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return categoryArray?.count ?? 1
@@ -67,6 +72,7 @@ class CategoryTableViewController: UITableViewController {
             
             let category = Category()
             category.name = textField.text!
+            category.colour = UIColor.randomFlat.hexValue()
             //self.categoryArray.append(category) // as Result is an auto updating container so no need to append it
             self.save(category: category)
          
@@ -98,10 +104,21 @@ class CategoryTableViewController: UITableViewController {
     
     func loadCategory()
     {
-        
         categoryArray = realm.objects(Category.self)
         
-        
     }
+    
+    override func deleteModel(at indexPath: IndexPath) {
+        
+        if let caterogyToBeDeleted = categoryArray?[indexPath.row]
+        {
+            do{
+            try realm.write {
+                realm.delete(caterogyToBeDeleted)
+            }
+            }catch{}
+        }
+    }
+    
 
 }
